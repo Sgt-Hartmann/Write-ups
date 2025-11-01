@@ -156,7 +156,7 @@ Put this folder first into the `PATH` environment variables:
 `export PATH=$PWD:$PATH`
 
 Execute the command:
-./backup
+`./backup`
 
 ![](https://github.com/user-attachments/assets/ee3846c6-f848-43c4-8d29-414418c82a61)
 
