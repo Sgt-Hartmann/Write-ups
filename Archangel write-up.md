@@ -10,7 +10,7 @@ And by scanning with nmap:
 
 We can see port 22 open (ssh) and port 80 (http) so that IP is hosting a website.
 Let's browse the IP:
-![](https://github.com/user-attachments/assets/2831506c-307f-42f4-b3c0-2ec9bf728fbb)
+![](https://github.com/user-attachments/assets/9471f3cf-a7b4-4083-b383-7dbe2d2bfa6e)
 
 As we can see, there's a hint for a "mafialive.thm" domain, so let's add this domain to the `etc/hosts` file:
 `sudo nano /etc/hosts`
