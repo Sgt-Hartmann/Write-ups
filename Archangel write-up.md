@@ -5,7 +5,7 @@ Let's begin by exporting in the environment variable the IP as 'target':
 
 And by scanning with nmap:
 `nmap -sC -sV $target`
-![](https://github.com/user-attachments/assets/fcc9337d-1ad0-441d-b22c-d7d5fd3685c1)
+![](https://github.com/user-attachments/assets/cc8e76a2-45e9-4a85-8188-c42806d4c40c)
 
 
 
