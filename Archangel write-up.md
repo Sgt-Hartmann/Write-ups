@@ -145,7 +145,7 @@ echo $PATH:
 /usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ```
 
-So:
+So: 
 Create the new `cp` file:
 `echo "/bin/bash" > cp`
 
