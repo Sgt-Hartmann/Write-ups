@@ -1,11 +1,11 @@
 Let's begin by exporting in the environment variable the IP as 'target':
-![](Images/Screenshot 2025-10-25 125657.png)
+![](images/Screenshot%202025-10-25%20125657.png)
 
 
 
 And by scanning with nmap:
 `nmap -sC -sV $target`
-![](images/Pasted image 20251025132243.png)
+![](images/Pasted$20image$2020251025132243.png)
 
 
 
