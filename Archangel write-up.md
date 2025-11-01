@@ -1,5 +1,5 @@
 Let's begin by exporting in the environment variable the IP as 'target':
-![[Screenshot 2025-10-25 125657.png]]
+![](https://github.com/user-attachments/assets/a9960340-00ef-4ff1-a715-a7e11d5a2955)
 
 
 
