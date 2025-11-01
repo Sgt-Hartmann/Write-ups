@@ -5,12 +5,12 @@ Let's begin by exporting in the environment variable the IP as 'target':
 
 And by scanning with nmap:
 `nmap -sC -sV $target`
-![](./images/Pasted image 20251025132243.png)
+![](images/Pasted image 20251025132243.png)
 
 
 
 Let's browse the IP:
-![](./images/Pasted image 20251025122524.png)
+![](images/Pasted image 20251025122524.png)
 As we can see, there's a hint for a "mafialive.thm" domain, so let's add this domain to the `etc/hosts` file:
 `sudo nano /etc/hosts`
 ![](./images/Pasted image 20251025121740.png)
