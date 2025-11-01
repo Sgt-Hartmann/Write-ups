@@ -1,5 +1,5 @@
 Let's begin by exporting in the environment variable the IP as 'target':
-![](images/Screenshot 2025-10-25 125657.png)
+![](Images/Screenshot 2025-10-25 125657.png)
 
 
 
@@ -20,7 +20,7 @@ As we can see, there's a hint for a "mafialive.thm" domain, so let's add this do
 
 
 Now we can browse by typing the domain in the search bar and catch the first flag:
-![](./images/Pasted image 20251025123251.png)
+![](./Images/Pasted image 20251025123251.png)
 
 
 
