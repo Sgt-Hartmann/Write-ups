@@ -156,6 +156,6 @@ Execute the command:
 
 ![](https://github.com/user-attachments/assets/ee3846c6-f848-43c4-8d29-414418c82a61)
 
-Congratulations! Now you are root :)
+Congratulations! You are now root :)
 
 
