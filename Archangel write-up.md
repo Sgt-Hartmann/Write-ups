@@ -31,8 +31,9 @@ Next step is fuzzing the app, we will use ffuf for this:
 ![](https://github.com/user-attachments/assets/c385a2e2-937a-469a-b5a3-edfeb80ed229)
 
 
-
+`robots.txt` and `test.php` both looks interesting.
 If we visit `robots.txt` page we can see that the only entry is `test.php` as ffuf let us see (last row).
+So let's visit `test.php`
 ![](https://github.com/user-attachments/assets/fa6a66e0-040e-4efc-8c1f-00c9adb51be4)
 
 
