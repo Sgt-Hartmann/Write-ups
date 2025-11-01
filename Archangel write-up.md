@@ -1,5 +1,5 @@
 Let's begin by exporting in the environment variable the IP as 'target':
-![](./Images/Screenshot$202025-10-25$20125657.png)
+![fghj](./Images/Screenshot$202025-10-25$20125657.png)
 
 
 
