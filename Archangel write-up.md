@@ -32,7 +32,7 @@ Next step is fuzzing the app, we will use ffuf for this:
 
 
 If we visit `robots.txt` page we can see that the only entry is `test.php` as ffuf let us see (last row).
-![](https://github.com/user-attachments/assets/6cbed028-1065-4057-96f3-e2ff9b687c1d)
+![](https://github.com/user-attachments/assets/fa6a66e0-040e-4efc-8c1f-00c9adb51be4)
 
 
 Though we're in a CTF, we can click the test button without problems. In a real life scenario we should make sure that the button won't break anything.
