@@ -13,7 +13,7 @@ Let's browse the IP:
 ![](https://github.com/user-attachments/assets/2831506c-307f-42f4-b3c0-2ec9bf728fbb)
 As we can see, there's a hint for a "mafialive.thm" domain, so let's add this domain to the `etc/hosts` file:
 `sudo nano /etc/hosts`
-![](https://github.com/user-attachments/assets/6cbed028-1065-4057-96f3-e2ff9b687c1d)
+![](https://github.com/user-attachments/assets/fd8c6508-2849-4b47-bde2-252251bac54c)
 
 
 ![](https://github.com/user-attachments/assets/a3f0adb6-bdba-4e59-ad36-7e315f816e56)
@@ -59,7 +59,7 @@ We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate 
 
 Let's try a php filter to exfiltrate data:
 `http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/mrrobot.php`
-![[Pasted image 20251031105955.png]]Now we have the phrase "Control is an illusion" written in base64.
+![](Now we have the phrase "Control is an illusion" written in base64.
 
 
 
