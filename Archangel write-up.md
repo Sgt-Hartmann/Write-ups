@@ -5,7 +5,7 @@ Let's begin by exporting in the environment variable the IP as 'target':
 
 And by scanning with nmap:
 `nmap -sC -sV $target`
-![[Pasted image 20251025132243.png]]
+![](https://github.com/user-attachments/assets/fcc9337d-1ad0-441d-b22c-d7d5fd3685c1)
 
 
 
