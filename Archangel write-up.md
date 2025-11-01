@@ -13,7 +13,7 @@ Let's browse the IP:
 ![](https://github.com/user-attachments/assets/2831506c-307f-42f4-b3c0-2ec9bf728fbb)
 As we can see, there's a hint for a "mafialive.thm" domain, so let's add this domain to the `etc/hosts` file:
 `sudo nano /etc/hosts`
-![](https://github.com/user-attachments/assets/2831506c-307f-42f4-b3c0-2ec9bf728fbb)
+![](https://github.com/user-attachments/assets/6cbed028-1065-4057-96f3-e2ff9b687c1d)
 
 
 ![](https://github.com/user-attachments/assets/a3f0adb6-bdba-4e59-ad36-7e315f816e56)
