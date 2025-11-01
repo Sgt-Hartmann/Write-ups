@@ -8,7 +8,7 @@ And by scanning with nmap:
 ![](https://github.com/user-attachments/assets/cc8e76a2-45e9-4a85-8188-c42806d4c40c)
 
 
-
+We can see port 22 open (ssh) and port 80 (http) so that IP is hosting a website.
 Let's browse the IP:
 ![](https://github.com/user-attachments/assets/2831506c-307f-42f4-b3c0-2ec9bf728fbb)
 
