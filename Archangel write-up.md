@@ -96,7 +96,7 @@ And we'll try if it's working by injecting `&cmd=whoami` in the URL:
 
 Now we have code execution.
 
-We can use it to upload a php reverse shell (`shell.php`) using wget and URL encoding the space, immediately after opening the server.
+We can use it to upload a php reverse shell (Pentestmonkey's php reverse shell named as `shell.php`) using wget and URL encoding the space, immediately after opening the server in the folder we've saved the reverse shell.
 ![](https://github.com/user-attachments/assets/c8d81dca-ab7c-431d-a3c8-ddf81e64d3d5)
 
 
@@ -111,7 +111,7 @@ It's time to fire up netcat and visit `mafialive.thm/shell.php`
 ![](https://github.com/user-attachments/assets/73bd663a-6950-40c9-aa21-590e9f6c3166)
 
 And...we're in!
-`whoami:`
+`whoami:` 
 `www-data`
 
 
