@@ -128,7 +128,7 @@ Let's do some cron enumeration:
 ` cat /etc/crontab`
 ![](https://github.com/user-attachments/assets/15739c46-68df-46d2-ae9e-fa7927e3652f)
 
-We can see that there's a helloworld.sh file that's been executed every minute as root.
+We can see that there's a helloworld.sh file that's been executed every minute as user 'archangel'.
 If we `ls -la` the file we can see we have write permission on it.
 ![](https://github.com/user-attachments/assets/84a87ca2-d266-4653-af04-5d313c3a8d4d)
 
