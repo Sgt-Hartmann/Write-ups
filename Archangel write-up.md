@@ -142,7 +142,7 @@ And obviously, we will stabilize the shell again and search for the flag of the 
 
 
 
-In the same folder, we can find a file named `backup` owned by root on which we have write permission. if we `strings` the file we can see that the file `cp` all the files of the `/home/user/archangel/myfiles/*` folder into `/opt/backupfiles`.
+In the same folder of the flag, we can find a file named `backup` owned by root on which we have write permission. if we `strings` the file we can see that the file `cp` all the files of the `/home/user/archangel/myfiles/*` folder into `/opt/backupfiles`.
 What we need to do is to create another `cp` file with just `/bin/bash` on it and write into the `$PATH` environment variable the new path of our `cp` file.
 The command to elencate the full path of the OS is `echo $PATH`
 
