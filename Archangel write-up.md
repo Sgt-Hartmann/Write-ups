@@ -22,7 +22,7 @@ As we can see, there's a hint for a "mafialive.thm" domain, so let's add this do
 
 
 Now we can browse by typing the domain in the search bar and catch the first flag:
-![](https://github.com/user-attachments/assets/00bdba25-e07f-448b-949a-9b2b5f44ac82)
+![](https://github.com/user-attachments/assets/d07c950a-6d45-4560-96a5-7c3c0dec1925)
 
 
 
@@ -76,7 +76,7 @@ Let's do it with the entire test.php page:
 
 
 And decode the exfiltrated data to find the second flag:
-![](https://github.com/user-attachments/assets/87172f7a-2aab-49ed-8ee8-7f06a6616acd)
+![](https://github.com/user-attachments/assets/c4f9ca9d-1c6b-4984-b96a-97d6b36083b3)
 
 
 
