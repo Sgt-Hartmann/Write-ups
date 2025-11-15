@@ -110,7 +110,7 @@ Don't forget to URL encode the space (%20)
 
 
 
-It's time to fire up netcat and visit `mafialive.thm/shell.php`
+It's time to fire up netcat and visit `mafialive.thm/shell.php` to trigger the shell.
 ![](https://github.com/user-attachments/assets/73bd663a-6950-40c9-aa21-590e9f6c3166)
 
 And...we're in!
