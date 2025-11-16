@@ -68,7 +68,9 @@ In the exploit we only need to change the IP and the LPORT to make it work.
 
 In another terminal we will open a server hosting a `netcat.exe` file named as `nc.exe`
 and open an `nc` listener on another one.
-We need to run this exploit twice, one to upload the `nc.exe` file and one to establish the connection.
+We need to run this script twice, one to upload the `nc.exe` file and one to establish the connection.
+The script needs too be executed in python2.
+
 First run:
 ![](https://github.com/user-attachments/assets/71d00b6e-c8a3-4aa2-8762-6f88d6b7e9dd)
 
