@@ -28,7 +28,7 @@ We will use the 2014 one: `use 1`.
 
 Now let's configure the options:
 ```
-show options`
+show options
 ```
 ```
 set RHOSTS <target IP>
