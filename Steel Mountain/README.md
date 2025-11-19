@@ -1,3 +1,5 @@
+Link: https://tryhackme.com/room/steelmountain
+
 Let's begin by exporting the IP as 'target' in the environment variables:
 ```
 export target=IP
