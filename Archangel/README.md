@@ -7,7 +7,7 @@ export target=<IP>
 ```
 ![](https://github.com/user-attachments/assets/a4d36a51-ee75-4c94-a48c-95f755da9d7d)
 
-
+\n
 
 And by scanning with nmap:
 ```
@@ -15,6 +15,7 @@ nmap -sC -sV $target
 ```
 ![](https://github.com/user-attachments/assets/cc8e76a2-45e9-4a85-8188-c42806d4c40c)
 
+\n
 
 We can see port 22 open (ssh) and port 80 (http) so that IP is hosting a website.
 Let's browse the IP:
