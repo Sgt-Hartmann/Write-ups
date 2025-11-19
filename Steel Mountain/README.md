@@ -24,7 +24,7 @@ It seems there are no other links or interesting things in this page. Let's try 
 ![](https://github.com/user-attachments/assets/60631de5-5140-4971-9046-a49c0ac4e582)
 In the lower-left corner of the screen you can see the name and version of the file server. Doing a quick research on google we can see it is a Rejetto HttpFileServer 2.3.
 
-First, we will exploit this using Metasploit. Let's fire it up and search for rejetto exploits:
+First we will exploit this using Metasploit. Let's fire it up and search for rejetto exploits:
 ![](https://github.com/user-attachments/assets/54502ade-ccaa-4674-9598-39aef6bdf409)
 We will use the 2014 one: `use 1`.
 
