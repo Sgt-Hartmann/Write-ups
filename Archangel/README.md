@@ -35,20 +35,22 @@ The poisoned log was then invoked through the vulnerable parameter, resulting in
 
 ### 5. Privilege Escalation
 
-After obtaining an initial foothold as user bill, a privilege escalation assessment was performed.
-A PowerUp.ps1 audit was executed on the target to enumerate common Windows misconfigurations. The scan reported that the service AdvancedSystemCareService9 was running with SYSTEM privileges but had weak file permissions on its executable path. Specifically, the service binary allowed Authenticated Users to write or replace the file.
+After obtaining a low‑privileged shell through the vulnerable CMS upload function, local enumeration was performed to identify privilege‑escalation vectors. Manual checks and automated tools (linpeas / manual inspection) revealed a custom SUID binary located at:
+```
+/home/archangel/backup
+```
 
-This misconfiguration enabled service binary hijacking. A malicious payload was generated using msfvenom, producing a custom executable (ASCService.exe) configured to open a reverse SYSTEM‑level shell. The payload was uploaded to the target and placed in:
-```
-C:\Program Files (x86)\IObit\Advanced SystemCare\
-```
-Replacing the original service binary.
+The file was owned by root and had the SUID bit set, allowing execution with elevated privileges. Static inspection of the binary showed that it called system utilities (such as tar) without using absolute paths, making it vulnerable to PATH hijacking.
 
-The privilege escalation was completed by manually restarting the vulnerable service:
+By creating a malicious executable named tar in a writable directory and placing that directory at the beginning of the PATH environment variable, it was possible to trick the SUID binary into executing attacker‑controlled code with root privileges. Executing the backup binary afterwards yielded a root shell.
+
+Proof of escalation:
+Running id after exploitation returned:
 ```
-sc stop AdvancedSystemCareService9
-sc start AdvancedSystemCareService9
+uid=0(root) gid=0(root) groups=0(root)
 ```
+indicating full root compromise of the system.
+
 ### 6. Full Technical Walkthrough (Concise)
 ```
 # Set target IP
