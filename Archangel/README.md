@@ -1,12 +1,12 @@
 Link: https://tryhackme.com/room/archangel
 
-### 1. Executive Summary
+### Executive Summary
 
 During the engagement of the target machine Archangel, the assessment resulted in a full system compromise. Initial access was obtained through a web‑application vulnerability chain involving Local File Inclusion (LFI), log poisoning, and remote code execution, leading to a shell as the low‑privileged web user www‑data. Subsequent enumeration revealed misconfigurations in scheduled tasks and insecure file permissions, allowing escalation to the user archangel through cron‑job abuse. Final privilege escalation to root was achieved by exploiting a PATH‑hijacking condition in a root‑owned backup script with writable permissions.
 
 No hardening or mitigation appeared to be implemented on the target prior to the assessment. The vulnerabilities stem from improper input sanitization, overly permissive file and script permissions, and unsafe design of automated tasks. Immediate remediation is recommended: sanitize PHP file‑handling functions, disable LFI vectors, secure log files, enforce strict permissions on user‑owned and root‑owned scripts, and review scheduled tasks for privilege escalation risks.
 
-### 2. Scope & Methodology
+### Scope & Methodology
 
 #### Scope:
 Single Linux host (IP = 10.10.96.236), no Active Directory, no buffer overflow components, and only legitimate network attack vectors permitted. The assessment focused exclusively on externally accessible services and web‑application entry points.
@@ -17,14 +17,14 @@ External scanning → web enumeration → discovery of LFI → log poisoning for
 #### Tools used:
 Nmap, ffuf, BurpSuite, base64 utilities, Python PTY, Netcat, and standard Linux enumeration commands. All steps were performed from a Kali‑based attacker VM under controlled lab conditions.
 
-### 3. Host Summary
+### Host Summary
 Service / Port	       |        Version / Info	           |                 Vulnerability Identified 
 -----------------------|-----------------------------------|------------------------------------------------------------
 HTTP (port 80)	       | Apache Web Server hosting PHP app | LFI via test.php parameter → leads to log poisoning → RCE
 SSH  (port 22)         | OpenSSH (default configuration)   | None directly exploitable for initial access
 Other open ports — None|                 —                 |                              —
 
-### 4. Initial Access
+### Initial Access
 
 Network scanning with Nmap identified two exposed services: SSH on port 22 and an Apache web server on port 80. Visiting the web service revealed a hint toward a virtual host (mafialive.thm), which was added to the local /etc/hosts file to properly resolve the application.
 
@@ -33,7 +33,7 @@ Access to /var/log/apache2/access.log via the same LFI route enabled log poisoni
 
 The poisoned log was then invoked through the vulnerable parameter, resulting in remote code execution and a shell as the web user www-data. Proof of access: execution of commands such as whoami through the injected payload returned www-data.
 
-### 5. Privilege Escalation
+### Privilege Escalation
 
 After obtaining a low‑privileged shell through the vulnerable CMS upload function, local enumeration was performed to identify privilege‑escalation vectors. Manual checks and automated tools (linpeas / manual inspection) revealed a custom SUID binary located at:
 ```
@@ -51,7 +51,7 @@ uid=0(root) gid=0(root) groups=0(root)
 ```
 indicating full root compromise of the system.
 
-### 6. Full Technical Walkthrough (Concise)
+### Full Technical Walkthrough (Concise)
 ```
 # Set target IP
 export target=10.10.226.163
@@ -91,7 +91,7 @@ cmd > sc start AdvancedSystemCareService9
 Result: Successful exploitation of a weakly‑permissioned service leading to full SYSTEM compromise.
 ```
 
-### 7. Findings
+### Findings
 
 ID   |  Finding	                                                                 | Severity	|   Impact
 -----|---------------------------------------------------------------------------|----------|----------------------------------------------------------------------------
@@ -99,7 +99,7 @@ F‑01 |	Outdated CMS + vulnerable file upload functionality	                   
 F‑02 |	Misconfigured SUID binary (/home/archangel/backup) enabling command exec | High	    |   Local privilege escalation to root through abused SUID mechanism
 
 
-### 8. Remediation
+### Remediation
 
 #### For F‑01 (Vulnerable CMS + Unrestricted File Upload):
 
@@ -124,7 +124,7 @@ Conduct recurring privilege audits (SUID/SGID, ACLs, web‑server permissions).
 Limit exposure of development/test components on production hosts.
 Introduce intrusion‑detection or host‑based monitoring to detect unauthorized file uploads or execution attempts.
 
-### 9. Conclusion
+### Conclusion
 
 The Archangel target host was fully compromised through a simple but effective attack chain involving a vulnerable web application and a misconfigured local privilege‑escalation mechanism. Initial access was obtained by exploiting an unrestricted file upload in the CMS, allowing remote command execution without authentication. Privilege escalation was achieved by abusing a SUID‑flagged backup binary that executed system commands insecurely, resulting in full root compromise.
 
@@ -132,7 +132,7 @@ The compromise relied solely on outdated software, weak upload validation, and i
 
 Applying the remediation steps outlined in this report would significantly reduce the attack surface and prevent similar compromises in future environments.
 
-### 10. Appendix A – Proof of Concept (Full Command & Output Log)
+### Appendix A – Proof of Concept (Full Command & Output Log)
 
 Exporting the IP in the environment variable as 'target':
 ```
