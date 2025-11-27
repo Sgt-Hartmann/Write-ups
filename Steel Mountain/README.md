@@ -12,12 +12,14 @@ Scope: single Windows host (IP = <target>), no Active Directory, no buffer overf
 Methodology: external network scanning → service enumeration → vulnerability identification → exploitation (initial access) → manual privilege escalation → proof of compromise. Tools used: RustScan, Nmap, HTTPFileServer exploit (via Metasploit and manual exploit), PowerUp, WinPEAS, msfvenom, certutil, netcat. All steps were executed from a Kali-based attacker VM.
 
 3. Host Summary
+```
 Service / Port	             |    Version / Info	             Vulnerability Identified
 -----------------------------|---------------------------------------------------------------------------------------------
 HTTP (port 80)	             | Web server — generic	       |   None relevant found
                              |                             |
 HTTP‑FileServer (port 8080)	 | Rejetto HTTPFileServer 2.3	 |   Remote code execution / write upload (public exploit)
 Other open ports —	Not used |                             |
+```
 
 Let's begin by exporting the IP as 'target' in the environment variables:
 ```
