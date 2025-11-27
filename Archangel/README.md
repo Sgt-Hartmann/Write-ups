@@ -92,6 +92,7 @@ Result: Successful exploitation of a weakly‑permissioned service leading to fu
 ### 7. Findings
 ```
 ID   |  Finding	                                                                 | Severity	|   Impact
+-----|---------------------------------------------------------------------------|----------|----------------------------------------------------------------------------
 F‑01 |	Outdated CMS + vulnerable file upload functionality	                     | High     |	Arbitrary file upload enabling remote command execution (initial foothold)
 F‑02 |	Misconfigured SUID binary (/home/archangel/backup) enabling command exec | High	    |   Local privilege escalation to root through abused SUID mechanism
 ```
