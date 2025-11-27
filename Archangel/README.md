@@ -99,7 +99,7 @@ F‑02 |	Misconfigured SUID binary (/home/archangel/backup) enabling command exe
 
 ### 8. Remediation
 
-##### For F‑01 (Vulnerable CMS + Unrestricted File Upload):
+#### For F‑01 (Vulnerable CMS + Unrestricted File Upload):
 
 Patch or upgrade the CMS to a supported version.
 Disable or strictly validate file uploads (MIME/type checking, server‑side extension validation, file size limits).
@@ -107,7 +107,7 @@ Implement server‑side filtering to prevent PHP or other executable file types 
 Restrict web‑server write permissions to only necessary directories.
 Deploy a Web Application Firewall (WAF) to detect anomalous upload or execution patterns.
 
-##### For F‑02 (Misconfigured SUID Backup Binary):
+#### For F‑02 (Misconfigured SUID Backup Binary):
 
 Remove the SUID bit entirely unless absolutely required.
 Replace the custom backup script/binary with a vetted, non‑privileged mechanism.
