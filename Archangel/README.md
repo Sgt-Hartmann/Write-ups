@@ -8,13 +8,13 @@ No hardening or mitigation appeared to be implemented on the target prior to the
 
 ### 2. Scope & Methodology
 
-##### Scope:
+#### Scope:
 Single Linux host (IP = 10.10.96.236), no Active Directory, no buffer overflow components, and only legitimate network attack vectors permitted. The assessment focused exclusively on externally accessible services and web‑application entry points.
 
-##### Methodology:
+#### Methodology:
 External scanning → web enumeration → discovery of LFI → log poisoning for remote code execution → foothold as www‑data → privilege escalation via cron‑job abuse → final escalation to root through PATH hijacking in a misconfigured backup script.
 
-##### Tools used:
+#### Tools used:
 Nmap, ffuf, BurpSuite, base64 utilities, Python PTY, Netcat, and standard Linux enumeration commands. All steps were performed from a Kali‑based attacker VM under controlled lab conditions.
 
 ### 3. Host Summary
