@@ -39,7 +39,7 @@ Used sc stop AdvancedSystemCareService9 and then sc start AdvancedSystemCareServ
 
 ### 6. Full Technical Walkthrough (concise)
 ```
-export target=<IP>
+export target=10.10.226.163
 rustscan -a $target --ulimit 5000 -- -sC -sV -oA scan
 # identified port 8080 – HTTPFileServer 2.3
 # visited in browser → confirmed version 2.3  
