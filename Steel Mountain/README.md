@@ -2,7 +2,7 @@ Link: https://tryhackme.com/room/steelmountain
 
 Let's begin by exporting the IP as 'target' in the environment variables:
 ```
-export target=<IP>
+export target=10.10.226.163
 ```
 ![](https://github.com/user-attachments/assets/d725ed03-afb0-494a-b2b8-affaa7c3391e)
 
