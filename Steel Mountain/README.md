@@ -13,7 +13,7 @@ Methodology: external network scanning → service enumeration → vulnerability
 
 ### 3. Host Summary
 ```
-Service / Port	             |    Version / Info	            |   Vulnerability Identified
+Service / Port	             |    Version / Info	          |   Vulnerability Identified
 -----------------------------|---------------------------------------------------------------------------------------------
 HTTP (port 80)	             | Web server — generic	          |   None relevant found
                              |                                |
