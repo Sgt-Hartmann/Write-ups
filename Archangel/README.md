@@ -18,11 +18,11 @@ External scanning → web enumeration → discovery of LFI → log poisoning for
 Nmap, ffuf, BurpSuite, base64 utilities, Python PTY, Netcat, and standard Linux enumeration commands. All steps were performed from a Kali‑based attacker VM under controlled lab conditions.
 
 ### Host Summary
-Service / Port	       |        Version / Info	           |                 Vulnerability Identified 
------------------------|-----------------------------------|------------------------------------------------------------
-HTTP (port 80)	       | Apache Web Server hosting PHP app | LFI via test.php parameter → leads to log poisoning → RCE
-SSH  (port 22)         | OpenSSH (default configuration)   | None directly exploitable for initial access
-Other open ports — None|                 —                 |                              —
+Service / Port	           |          Version / Info           |                 Vulnerability Identified 
+---------------------------|-----------------------------------|------------------------------------------------------------
+HTTP (port 80)	           | Apache Web Server hosting PHP app | LFI via test.php parameter → leads to log poisoning → RCE
+SSH  (port 22)             | OpenSSH (default configuration)   | None directly exploitable for initial access
+Other open ports — Not used|                 —                 |                              —
 
 ### Initial Access
 
