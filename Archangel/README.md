@@ -130,7 +130,7 @@ The compromise relied solely on outdated software, weak upload validation, and i
 
 Applying the remediation steps outlined in this report would significantly reduce the attack surface and prevent similar compromises in future environments.
 
-# 10. Appendix A – Proof of Concept (Full Command & Output Log)
+### 10. Appendix A – Proof of Concept (Full Command & Output Log)
 
 Exporting the IP in the environment variable as 'target':
 ```
