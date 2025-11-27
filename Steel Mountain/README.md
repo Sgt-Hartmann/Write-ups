@@ -1,5 +1,24 @@
 Link: https://tryhackme.com/room/steelmountain
 
+# SteelMountain — OSCP‑Style Write‑up
+
+1. Executive Summary
+
+During the engagement of the target machine SteelMountain, the test achieved full compromise: initial access via a vulnerable file‑server (HTTPFileServer 2.3) was followed by privilege escalation to SYSTEM through insecure service permissions. The compromise allowed full control of the host. No mitigation was applied on the target prior to the test. The weakness lies in outdated software and improper service permissions. Immediate remediation is recommended: patch or upgrade the file‑server software, and restrict write permissions on service binaries to administrators only.
+
+2. Scope & Methodology
+
+Scope: single Windows host (IP = <target>), no Active Directory, no buffer overflow, only valid network attack vectors.
+Methodology: external network scanning → service enumeration → vulnerability identification → exploitation (initial access) → manual privilege escalation → proof of compromise. Tools used: RustScan, Nmap, HTTPFileServer exploit (via Metasploit and manual exploit), PowerUp, WinPEAS, msfvenom, certutil, netcat. All steps were executed from a Kali-based attacker VM.
+
+3. Host Summary
+Service / Port	             |    Version / Info	             Vulnerability Identified
+-----------------------------|---------------------------------------------------------------------------------------------
+HTTP (port 80)	             | Web server — generic	       |   None relevant found
+                             |                             |
+HTTP‑FileServer (port 8080)	 | Rejetto HTTPFileServer 2.3	 |   Remote code execution / write upload (public exploit)
+Other open ports —	Not used |                             |
+
 Let's begin by exporting the IP as 'target' in the environment variables:
 ```
 export target=10.10.226.163
