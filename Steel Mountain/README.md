@@ -2,16 +2,16 @@ Link: https://tryhackme.com/room/steelmountain
 
 # SteelMountain — OSCP‑Style Write‑up
 
-### 1. Executive Summary
+### Executive Summary
 
 During the engagement of the target machine SteelMountain, the test achieved full compromise: initial access via a vulnerable file‑server (HTTPFileServer 2.3) was followed by privilege escalation to SYSTEM through insecure service permissions. The compromise allowed full control of the host. No mitigation was applied on the target prior to the test. The weakness lies in outdated software and improper service permissions. Immediate remediation is recommended: patch or upgrade the file‑server software, and restrict write permissions on service binaries to administrators only.
 
-### 2. Scope & Methodology
+### Scope & Methodology
 
 Scope: single Windows host (IP = 10.10.226), no Active Directory, no buffer overflow, only valid network attack vectors.
 Methodology: external network scanning → service enumeration → vulnerability identification → exploitation (initial access) → manual privilege escalation → proof of compromise. Tools used: RustScan, Nmap, HTTPFileServer exploit (via Metasploit and manual exploit), PowerUp, WinPEAS, msfvenom, certutil, netcat. All steps were executed from a Kali-based attacker VM.
 
-### 3. Host Summary
+### Host Summary
 ```
 Service / Port	             |    Version / Info	          |   Vulnerability Identified
 -----------------------------|--------------------------------|------------------------------------------------------------
@@ -23,14 +23,14 @@ Other open ports —	Not used |                                |
 ```
 Compromise path: HTTPFileServer 2.3 → upload shell via exploit → Meterpreter shell as user bill → enumeration with PowerUp/WinPEAS → insecure service permissions → replacement of service binary → escalation to SYSTEM → full control.
 
-### 4. Initial Access
+### Initial Access
 
 Network scan with RustScan and Nmap identified port 8080 open and running HTTPFileServer.
 Manual visit to port 8080 showed the HTTPFileServer welcome page, confirming version 2.3.
 A public exploit (from Exploit‑DB) for Rejetto HTTPFileServer 2.3 was leveraged to upload a staged shell. A Meterpreter session was obtained under user bill.
 Proof of access: Meterpreter session output: getuid → STEELMOUNTAIN\bill.
 
-### 5. Privilege Escalation
+### Privilege Escalation
 
 Uploaded PowerUp.ps1 via Meterpreter to the target’s %TEMP% directory.
 Ran Invoke-AllChecks → identified a misconfigured service AdvancedSystemCareService9, running as SYSTEM, with weak permissions allowing Restart / AppendData.
@@ -38,7 +38,7 @@ Generated a reverse shell executable using msfvenom, named ASCService.exe.
 Via Meterpreter upload, replaced the legitimate service binary located under C:\Program Files (x86)\IObit\Advanced SystemCare\ with ASCService.exe.
 Used sc stop AdvancedSystemCareService9 and then sc start AdvancedSystemCareService9 to trigger execution — obtaining a SYSTEM shell (netcat listener connected).
 
-### 6. Full Technical Walkthrough (concise)
+### Full Technical Walkthrough (concise)
 ```
 export target=10.10.226.163
 rustscan -a $target --ulimit 5000 -- -sC -sV -oA scan
@@ -59,7 +59,7 @@ cmd > sc start AdvancedSystemCareService9
 # attacker catches reverse shell → SYSTEM privileges  
 ```
 
-### 7. Findings
+### Findings
 ```
 | ID   | Finding                                                                         | Severity | Impact                                                                    |
 | ---- | ------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------- |
@@ -67,18 +67,18 @@ cmd > sc start AdvancedSystemCareService9
 | F-02 | Service `AdvancedSystemCareService9` with weak permissions (AppendData/Restart) | High     | Local privilege escalation to SYSTEM possible by replacing service binary |
 ```
 
-### 8. Remediation
+### Remediation
 
 For F-01: Immediately update or remove HTTPFileServer 2.3. Use a maintained equivalent or disable service if not needed.
 For F-02: Modify permissions on service executable and folder so that only administrators (or SYSTEM) can write or replace the binary. Restrict write/modify access. Use principle of least privilege.
 Implement periodic patch management and service permission reviews.
 Consider host-based hardening: avoid unnecessary third‑party software like “Advanced SystemCare”, especially outdated versions.
 
-### 9. Conclusion
+### Conclusion
 
 The target machine was fully compromised using publicly available exploits and a straightforward privilege‑escalation via weak service permissions. The vulnerability chain required no zero‑day and no buffer overflow — only misconfigurations and outdated software. The case demonstrates the effectiveness of combining basic enumeration, public exploits, and privilege‑escalation tools (PowerUp/WinPEAS) to achieve SYSTEM-level compromise. The provided remediation steps significantly reduce risk if applied.
 
-### 10. Appendix A – Proof of Concept (Full Command & Output Log)
+### Appendix A – Proof of Concept (Full Command & Output Log)
 
 Let's begin by exporting the IP as 'target' in the environment variables:
 ```
