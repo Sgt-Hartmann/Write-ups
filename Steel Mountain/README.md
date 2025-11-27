@@ -61,7 +61,7 @@ cmd > sc start AdvancedSystemCareService9
 
 ### Findings
 ```
-| ID   | Finding                                                                         | Severity | Impact                                                                    |
+  ID   | Finding                                                                         | Severity | Impact                                                                    |
 | ---- | ------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------- |
 | F-01 | Outdated HTTPFileServer 2.3 — remote file upload / RCE                          | High     | Full remote code execution as SYSTEM possible (initial access)            |
 | F-02 | Service `AdvancedSystemCareService9` with weak permissions (AppendData/Restart) | High     | Local privilege escalation to SYSTEM possible by replacing service binary |
