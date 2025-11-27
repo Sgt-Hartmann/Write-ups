@@ -8,7 +8,7 @@ During the engagement of the target machine SteelMountain, the test achieved ful
 
 ### 2. Scope & Methodology
 
-Scope: single Windows host (IP = <target>), no Active Directory, no buffer overflow, only valid network attack vectors.
+Scope: single Windows host (IP = 10.10.226), no Active Directory, no buffer overflow, only valid network attack vectors.
 Methodology: external network scanning → service enumeration → vulnerability identification → exploitation (initial access) → manual privilege escalation → proof of compromise. Tools used: RustScan, Nmap, HTTPFileServer exploit (via Metasploit and manual exploit), PowerUp, WinPEAS, msfvenom, certutil, netcat. All steps were executed from a Kali-based attacker VM.
 
 ### 3. Host Summary
