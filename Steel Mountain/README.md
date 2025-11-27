@@ -18,6 +18,7 @@ Service / Port	             |    Version / Info	          |   Vulnerability Iden
 HTTP (port 80)	             | Web server — generic	          |   None relevant found
                              |                                |
 HTTP‑FileServer (port 8080)	 | Rejetto HTTPFileServer 2.3	  |   Remote code execution / write upload (public exploit)
+                             |                                |
 Other open ports —	Not used |                                |
 ```
 Compromise path: HTTPFileServer 2.3 → upload shell via exploit → Meterpreter shell as user bill → enumeration with PowerUp/WinPEAS → insecure service permissions → replacement of service binary → escalation to SYSTEM → full control.
