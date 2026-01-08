@@ -9,7 +9,7 @@ No hardening or mitigation appeared to be implemented on the target prior to the
 ### Scope & Methodology
 
 #### Scope:
-Single Linux host (IP = 10.10.96.236), no Active Directory, no buffer overflow components, and only legitimate network attack vectors permitted. The assessment focused exclusively on externally accessible services and web‑application entry points.
+Single Linux host, no Active Directory, no buffer overflow components, and only legitimate network attack vectors permitted. The assessment focused exclusively on externally accessible services and web‑application entry points.
 
 #### Methodology:
 External scanning → web enumeration → discovery of LFI → log poisoning for remote code execution → foothold as www‑data → privilege escalation via cron‑job abuse → final escalation to root through PATH hijacking in a misconfigured backup script.
